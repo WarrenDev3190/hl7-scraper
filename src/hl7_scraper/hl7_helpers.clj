@@ -44,17 +44,23 @@
     (assoc {} key
       (reduce
         (fn [obj row]
-          (assoc obj (nth row 3) {:type (nth row 4) :code (nth row 5)})) {} raw))))
+          (assoc obj (swallow-exceptions (parse-int (nth row 3)) ) {:type (nth row 4) :code (nth row 5)})) {} raw))))
 
 
 (defn parse-int [s]
   (Integer. s))
 
-(map #(get-data "v21" %)(get-hl7-key-list))
-
 (defn get-by-ver [ver]
-  (assoc {} ver (apply merge (map #(get-data ver %)(get-hl7-key-list)))))
+  (let [ver-key (ver-to-float ver)]
+    (assoc {} ver-key
+      (apply merge
+        (map #(get-data ver %)(get-hl7-key-list))))))
 
+(defn ver-to-float [ver]
+  (->> (re-matches  (re-pattern "v(\\d)(\\d)") ver)
+       (rest)
+       (clojure.string/join ".")
+       (Float.)))
 
 (defn retrieve-hl7 []
   (apply merge (map #(get-by-ver %)(make-ver-list))))
