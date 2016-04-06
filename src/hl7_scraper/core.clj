@@ -4,6 +4,3 @@
 (defn main- []
   (spit "hl7.edn"
     (print-str (helpers/retrieve-hl7))))
-
-
-
