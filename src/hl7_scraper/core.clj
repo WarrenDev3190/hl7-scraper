@@ -1,6 +1,9 @@
-(ns hl7-scraper.core)
+(ns hl7-scraper.core
+  (:require [hl7-scraper.hl7-helpers :as helpers]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn main- []
+  (spit "hl7.edn"
+    (print-str (helpers/retrieve-hl7))))
+
+
+
